@@ -1,0 +1,22 @@
+version: v0.1
+displayName: Test - 05/09/2025 12:21:45 PM
+description: Locust load test
+testPlan: locustfile.py
+testType: Locust
+engineInstances: 1
+env:
+  - name: LOCUST_USERS
+    value: '50'
+  - name: LOCUST_RUN_TIME
+    value: '120'
+  - name: LOCUST_SPAWN_RATE
+    value: '1'
+resourceId: >-
+  /subscriptions/7c71b563-0dc0-4bc0-bcf6-06f8f0516c7a/resourceGroups/mitsha-rg/providers/Microsoft.LoadTestService/loadtests/mitsha-wcus2
+secrets:
+  - name: DEBUG_MODE
+    value: ''
+    type: SECRET_VALUE
+configurationFiles:
+  - requirements.txt
+testId: 560a8dd7-156f-4df7-89ef-195a6126f9b1

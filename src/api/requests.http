@@ -1,6 +1,6 @@
 ###
 # Base URL for the Todo API
-@baseUrl = http://localhost:3100/lists
+@baseUrl = https://app-api-ocwiawb26beca.azurewebsites.net/lists
 
 ###
 # Variables - these can be customized as needed
