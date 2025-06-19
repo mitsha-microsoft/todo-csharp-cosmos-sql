@@ -1,0 +1,121 @@
+###
+# Base URL for the Todo API
+@baseUrl = https://app-api-ocwiawb26beca.azurewebsites.net/lists
+
+###
+# Variables - these can be customized as needed
+@listName = "My Awesome List"
+@listDescription = "A description for my awesome list"
+@itemName = "Important Task"
+@itemDescription = "Details about this important task"
+@itemStateTodo = "todo"
+@itemStateInProgress = "inprogress"
+@itemStateCompleted = "completed"
+@currentDateTime = {{$datetime iso8601}}
+
+###
+# Get all lists
+# Retrieves all todo lists, supports optional pagination via skip and batchSize query parameters.
+GET {{baseUrl}}
+Accept: application/json
+
+###
+# Create a new list
+# Creates a new todo list with the provided name and optional description.
+# The ID of the newly created list is captured in the 'createdListId' variable.
+@name createList
+POST {{baseUrl}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "name": "{{listName}}",
+  "description": "{{listDescription}}"
+}
+
+###
+# Store the ID of the created list for subsequent requests
+@createdListId = {{createList.response.body.$.id}}
+
+###
+# Get a specific list by ID
+# Retrieves the details of the list created in the previous step.
+GET {{baseUrl}}/{{createdListId}}
+Accept: application/json
+
+###
+# Update a specific list by ID
+# Updates the name and description of the previously created list.
+PUT {{baseUrl}}/{{createdListId}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "name": "{{listName}} - Updated",
+  "description": "{{listDescription}} - Updated"
+}
+
+###
+# Get all items in a specific list
+# Retrieves all items for the previously created list, supports optional pagination.
+GET {{baseUrl}}/{{createdListId}}/items
+Accept: application/json
+
+###
+# Create a new list item in a specific list
+# Adds a new todo item to the previously created list.
+# The ID of the newly created item is captured in the 'createdItemId' variable.
+@name createListItem
+POST {{baseUrl}}/{{createdListId}}/items
+Content-Type: application/json
+Accept: application/json
+
+{
+  "name": "{{itemName}}",
+  "state": "{{itemStateTodo}}",
+  "dueDate": "{{currentDateTime}}",
+  "description": "{{itemDescription}}"
+}
+
+###
+# Store the ID of the created item for subsequent requests
+@createdItemId = {{createListItem.response.body.$.id}}
+
+###
+# Get a specific list item by list ID and item ID
+# Retrieves the details of the item created in the previous step.
+GET {{baseUrl}}/{{createdListId}}/items/{{createdItemId}}
+Accept: application/json
+
+###
+# Update a specific list item
+# Updates the details of the previously created item, such as its name, state, and description.
+PUT {{baseUrl}}/{{createdListId}}/items/{{createdItemId}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "name": "{{itemName}} - Updated",
+  "state": "{{itemStateInProgress}}",
+  "dueDate": "{{currentDateTime}}",
+  "completedDate": null,
+  "description": "{{itemDescription}} - Updated"
+}
+
+###
+# Get list items by state
+# Retrieves all items in the specified list that match the given state (e.g., 'todo').
+GET {{baseUrl}}/{{createdListId}}/state/{{itemStateInProgress}}
+Accept: application/json
+
+###
+# Delete a specific list item
+# Deletes the item created earlier.
+DELETE {{baseUrl}}/{{createdListId}}/items/{{createdItemId}}
+Accept: application/json
+
+###
+# Delete a specific list
+# Deletes the list created at the beginning of these requests.
+DELETE {{baseUrl}}/{{createdListId}}
+Accept: application/json
